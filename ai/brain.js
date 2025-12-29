@@ -1,10 +1,19 @@
-import hydraulic from "../data/systems/hydraulic.json" assert { type: "json" };
+herelet hydraulicData = null;
 
-export function getAnswer(text) {
+// pakua data ya hydraulic
+async function loadHydraulic() {
+  if (!hydraulicData) {
+    const res = await fetch("./data/systems/hydraulic.json");
+    hydraulicData = await res.json();
+  }
+}
+
+export async function getAnswer(text) {
+  await loadHydraulic();
+
   const message = text.toLowerCase();
 
-  // Angalia hydraulic
-  for (const problem of hydraulic.problems) {
+  for (const problem of hydraulicData.problems) {
     for (const key of problem.keywords) {
       if (message.includes(key)) {
         return problem.answer;
@@ -12,5 +21,5 @@ export function getAnswer(text) {
     }
   }
 
-  return "Nimekuelewa, lakini bado sina jibu sahihi. Tafadhali eleza zaidi au taja mfumo (engine, hydraulic, umeme).";
+  return "Nimekuelewa, lakini bado sina jibu sahihi. Tafadhali eleza zaidi au taja mfumo kama hydraulic, engine au umeme.";
 }
