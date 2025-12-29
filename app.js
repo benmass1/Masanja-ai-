@@ -1,4 +1,4 @@
-hereimport { startListening } from "./ai/voice.js";
+import { startListening, speak } from "./ai/voice.js";
 import { getAnswer } from "./ai/brain.js";
 
 const micBtn = document.getElementById("micBtn");
@@ -18,6 +18,9 @@ micBtn.addEventListener("click", () => {
         text +
         "\n\n🤖 Masanja AI:\n" +
         answer;
+
+      // 🔊 AI IONGEE
+      speak(answer);
     },
     (error) => {
       responseBox.innerText = "❌ Kosa la sauti: " + error;
