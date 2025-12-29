@@ -1,32 +1,33 @@
 herewindow.MASANJA_KNOWLEDGE = [
 
-  // 🔹 UTAMBULISHO
   {
+    category: "intro",
     keywords: ["wewe ni nani", "jina lako", "unaitwa nani"],
-    answer: "Mimi ni Masanja AI, msaidizi wa ufundi kwa sauti. Nimeundwa kukusaidia kuelewa na kutatua matatizo ya mashine."
+    answer: "Mimi ni Masanja AI, msaidizi wa ufundi kwa sauti. Nipo kukusaidia kutatua matatizo ya mashine."
   },
 
   {
+    category: "intro",
     keywords: ["unafanya kazi gani", "kazi yako ni nini"],
-    answer: "Kazi yangu ni kukusaidia kwenye masuala ya ufundi kama hydraulic, engine, umeme na mifumo ya mashine."
+    answer: "Kazi yangu ni kukusaidia kwenye hydraulic, engine, umeme, na mifumo ya mashine."
   },
 
-  // 🔹 HYDRAULIC
   {
-    keywords: ["hydraulic", "haina nguvu", "pressure"],
-    answer: "Hydraulic haina nguvu mara nyingi husababishwa na mafuta pungufu, pump iliyochoka, au hose inayovuja. Angalia kwanza kiwango cha mafuta."
+    category: "hydraulic",
+    keywords: ["hydraulic", "haina nguvu", "pressure", "haipandishi"],
+    answer: "Hydraulic haina nguvu. Kagua kiwango cha mafuta, hali ya pump, na kama kuna hose inayovuja."
   },
 
-  // 🔹 ENGINE
   {
-    keywords: ["engine", "haiwaki", "start"],
-    answer: "Engine isipoanza, angalia betri, fuel supply, filter, na starter motor."
+    category: "engine",
+    keywords: ["engine", "haiwaki", "start", "haianzi"],
+    answer: "Engine ikikataa kuanza, angalia betri, fuel supply, filter, na starter motor."
   },
 
-  // 🔹 JOTO
   {
-    keywords: ["joto", "overheat"],
-    answer: "Mashine ikipata joto, hakikisha radiator iko safi, coolant ipo ya kutosha, na fan inafanya kazi vizuri."
+    category: "overheat",
+    keywords: ["joto", "overheat", "inachemka"],
+    answer: "Mashine ikipata joto, safisha radiator, hakikisha coolant ipo, na fan inafanya kazi."
   }
 
 ];
