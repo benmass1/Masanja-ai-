@@ -1,63 +1,27 @@
-const output = document.getElementById("output");
-const micBtn = document.getElementById("micBtn");
-
-const SpeechRecognition =
-  window.SpeechRecognition || window.webkitSpeechRecognition;
-
-const recognition = SpeechRecognition ? new SpeechRecognition() : null;
-
-if (recognition) {
-  recognition.lang = "sw-TZ";
-  recognition.interimResults = false;
-  recognition.continuous = false;
-}
-
-function speak(text) {
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = "sw-TZ";
-  speechSynthesis.cancel();
-  speechSynthesis.speak(utterance);
-}
-
-function getAnswer(text) {
+herefunction getAnswer(text) {
   text = text.toLowerCase();
 
+  let bestMatch = null;
+  let highestScore = 0;
+
   for (const item of window.MASANJA_KNOWLEDGE) {
+    let score = 0;
+
     for (const key of item.keywords) {
       if (text.includes(key)) {
-        return item.answer;
+        score++;
       }
     }
-  }
-  return "Samahani, bado sijapata jibu sahihi. Tafadhali eleza zaidi.";
-}
 
-micBtn.onclick = () => {
-  if (!recognition) {
-    output.innerText = "Browser yako haiungi mkono sauti.";
-    return;
+    if (score > highestScore) {
+      highestScore = score;
+      bestMatch = item;
+    }
   }
 
-  output.innerText = "🎧 Ninasikiliza...";
-  recognition.start();
-};
+  if (bestMatch && highestScore > 0) {
+    return bestMatch.answer;
+  }
 
-if (recognition) {
-  recognition.onresult = (event) => {
-    const text = event.results[0][0].transcript;
-
-    const answer = getAnswer(text);
-
-    output.innerText =
-      "🗣️ Umesema:\n" +
-      text +
-      "\n\n🤖 Masanja AI:\n" +
-      answer;
-
-    speak(answer);
-  };
-
-  recognition.onerror = () => {
-    output.innerText = "Kuna tatizo la sauti. Jaribu tena.";
-  };
+  return "Sijapata jibu sahihi bado. Tafadhali eleza zaidi au taja mfumo unaozungumzia.";
 }
