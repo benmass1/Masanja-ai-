@@ -1,40 +1,25 @@
-<!DOCTYPE html>
+here<!DOCTYPE html>
 <html lang="sw">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Masanja AI</title>
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <div class="app">
-    <!-- HEADER -->
-    <header>
-      <h1>🤖 Masanja AI</h1>
-      <p>Msaidizi wa Ufundi kwa Sauti</p>
-    </header>
+    <h1>🤖 Masanja AI</h1>
+    <p class="subtitle">Msaidizi wa Ufundi kwa Sauti</p>
 
-    <!-- MAIN CONTENT -->
-    <main>
-      <div class="response-box" id="response">
-        👋 Karibu Masanja AI. Bonyeza mic uanze kuzungumza.
-      </div>
+    <div id="output" class="output">
+      Karibu Masanja AI. Bonyeza 🎤 uanze kuzungumza.
+    </div>
 
-      <button class="mic-btn" id="micBtn" aria-label="Anza kusikiliza">
-        🎤
-      </button>
-    </main>
-
-    <!-- FOOTER -->
-    <footer>
-      <small>© 2025 Masanja AI</small>
-    </footer>
+    <button id="micBtn" class="mic-btn">🎤</button>
   </div>
 
-  <!-- JAVASCRIPT (MODULE) -->
-  <script type="module" src="app.js"></script>
+  <script src="data/knowledge.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
