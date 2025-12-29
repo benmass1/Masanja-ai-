@@ -1,5 +1,4 @@
-
-<!DOCTYPE html>
+here<!DOCTYPE html>
 <html lang="sw">
 <head>
 <meta charset="UTF-8">
@@ -15,7 +14,7 @@ body{
   color:#fff
 }
 .app{width:100%;max-width:420px;padding:20px;text-align:center}
-h1{margin:5px 0}
+h1{margin:6px 0}
 .sub{font-size:14px;opacity:.85;margin-bottom:12px}
 .output{
   background:#fff;color:#000;border-radius:12px;
@@ -34,7 +33,7 @@ h1{margin:5px 0}
 <body>
 <div class="app">
   <h1>🤖 Masanja AI</h1>
-  <div class="sub">Msaidizi wa Ufundi kwa Sauti (Kiswahili cha Tanzania)</div>
+  <div class="sub">Msaidizi wa Ufundi (Kiswahili cha Tanzania)</div>
 
   <div id="out" class="output">
 Karibu Masanja AI.
@@ -45,137 +44,83 @@ Bonyeza 🎤 uongee nami.
 </div>
 
 <script>
-/* ======================================================
-   AKILI YA MASANJA AI – KISWAHILI CHA TANZANIA 🇹🇿
-====================================================== */
+/* =========================
+   AKILI (KISWAHILI CHA TZ)
+========================= */
+const DATA = [
+  {k:["vipi","mambo","poa","niaje","ukoje"],a:"Poa kabisa baba. Nipo tayari, sema shida yako."},
+  {k:["wewe ni nani","jina lako","unaitwa nani"],a:"Mimi ni Masanja AI, msaidizi wako wa ufundi hapa Bongo."},
+  {k:["nisaidie","msaada","help"],a:"Hakuna noma. Eleza tatizo lilivyo."},
 
-/* ===== MAZUNGUMZO YA KAWAIDA (BONGO) ===== */
-const CHAT_TZ = [
-{keys:["vipi","mambo","poa","fresh","niaje","ukoje"],answer:"Poa kabisa baba. Nipo tayari, sema shida yako."},
-{keys:["unasikia","upo","upo hapo"],answer:"Nakusikia poa kabisa. Endelea kuongea."},
-{keys:["asante","ahsante","shukrani","nashukuru"],answer:"Sawa baba, karibu sana. Kazi yangu kukusaidia."},
-{keys:["nisaidie","msaada","help","niokoe"],answer:"Hakuna noma. Eleza tatizo lilivyo."},
-{keys:["sielewi","imenichanganya","nimekwama"],answer:"Hakuna shida. Eleza polepole tuanze pamoja."}
+  {k:["hydraulic","hydroly","haidrolic","haina nguvu"],a:"Hydraulic ikikosa nguvu, angalia mafuta, pump na kama kuna hose inavuja."},
+  {k:["hydraulic","kinachemsha","inachemka","joto"],a:"Hydraulic ikinachemsha, angalia oil cooler, mafuta na mfumo wa kupooza."},
+
+  {k:["engine","injini","haiwaki","haianzi"],a:"Injini ikigoma kuwaka, angalia betri, mafuta yanafika na starter."},
+  {k:["engine","inachemka","joto"],a:"Injini ikipata joto kali, radiator inaweza kuwa chafu au coolant imepungua."},
+
+  {k:["umeme","taa hazifanyi","battery imekufa"],a:"Kagua fuse, wiring na betri. Hapo ndipo shida nyingi za umeme zinatokea."},
+
+  {k:["*"],a:"Nimekuelewa kwa ujumla. Eleza zaidi au taja kama ni hydraulic, injini au umeme."}
 ];
 
-/* ===== UTAMBULISHO ===== */
-const INTRO_TZ = [
-{keys:["wewe ni nani","jina lako","unaitwa nani","wewe nani"],answer:"Mimi ni Masanja AI, msaidizi wako wa ufundi hapa Bongo."},
-{keys:["unafanya kazi gani","kazi yako ni nini"],answer:"Kazi yangu ni kukusaidia kwenye hydraulic, injini, umeme na matatizo ya mashine."}
-];
-
-/* ===== HYDRAULIC (LUGHA YA FUNDI) ===== */
-const HYDRAULIC_TZ = [
-{keys:["hydraulic","hydroly","haidrolic","haina nguvu","haipandishi"],answer:"Hydraulic ikikosa nguvu, kuna uwezekano mafuta yamepungua, pump imechoka au hose inavuja."},
-{keys:["hydraulic","hydroly","kinachemsha","inachemka","joto kali"],answer:"Hydraulic ikinachemsha, angalia mafuta kama ni machafu, oil cooler imeziba au cooling system ina shida."},
-{keys:["hydraulic","inavuma","inapiga kelele","kelele nyingi"],answer:"Hydraulic ikivuma, mara nyingi kuna hewa kwenye mfumo au pump imeanza kuchoka."},
-{keys:["hydraulic","inavuja","mafuta yanatoka","oil inatiririka"],answer:"Ukipata uvujaji wa mafuta, kagua hose, seal au fitting. Usifanye kazi bila kurekebisha."},
-{keys:["boom","mkono","haipandi","haufanyi"],answer:"Boom isipopanda, tatizo linaweza kuwa valve, pump au pressure imepungua."}
-];
-
-/* ===== ENGINE (KIBONGO) ===== */
-const ENGINE_TZ = [
-{keys:["engine","injini","haiwaki","haianzi"],answer:"Injini ikigoma kuwaka, angalia betri, mafuta yanafika au starter inazunguka."},
-{keys:["engine","injini","inakufa","inazima"],answer:"Injini ikizima yenyewe, kuna shida ya mafuta, sensor au umeme."},
-{keys:["engine","injini","joto","inachemka","overheat"],answer:"Injini ikipata joto kali, radiator inaweza kuwa chafu au coolant imepungua."},
-{keys:["engine","moshi mweusi"],answer:"Moshi mweusi unaonyesha mafuta ni mengi au air filter imeziba."},
-{keys:["engine","moshi mweupe"],answer:"Moshi mweupe mara nyingi ni dalili ya maji kuingia kwenye injini."}
-];
-
-/* ===== UMEME ===== */
-const ELECTRICAL_TZ = [
-{keys:["umeme","taa hazifanyi","light zimekufa"],answer:"Kama taa hazifanyi kazi, anza kukagua fuse na wiring."},
-{keys:["betri","battery imekufa"],answer:"Betri ikikufa, ichaji au ibadilishe kisha kagua alternator."},
-{keys:["starter","haizunguki"],answer:"Starter isipozunguka, angalia betri, relay na starter yenyewe."}
-];
-
-/* ===== LUGHA YA MITAANI ===== */
-const STREET_TZ = [
-{keys:["inazingua","inasumbua","haiko sawa"],answer:"Sawa. Eleza dalili zaidi ili nijue wapi pa kuanzia."},
-{keys:["imechoka","imekufa","imeharibika vibaya"],answer:"Inawezekana sehemu imechoka kabisa. Itahitaji ukaguzi wa kina au kubadilishwa."},
-{keys:["ni noma","shida tupu"],answer:"Pole baba. Tuangalie hatua kwa hatua mpaka tupate chanzo."}
-];
-
-/* ===== FALLBACK (HAIKAI KIMYA) ===== */
-const FALLBACK = [
-{keys:["*"],answer:"Nimekuelewa kwa ujumla. Eleza zaidi au taja kama ni hydraulic, injini au umeme."}
-];
-
-/* ===== KUUNGANISHA YOTE ===== */
-const ALL_TZ = [
-...CHAT_TZ,
-...INTRO_TZ,
-...HYDRAULIC_TZ,
-...ENGINE_TZ,
-...ELECTRICAL_TZ,
-...STREET_TZ,
-...FALLBACK
-];
-
-/* ===== LOGIC YA KUCHAGUA JIBU ===== */
-function getAnswer(text){
-  text = text.toLowerCase();
-  let bestScore = 0;
-  let bestAnswer = null;
-
-  for(const item of ALL_TZ){
-    if(item.keys.includes("*")) continue;
-    let score = 0;
-    for(const k of item.keys){
-      if(text.includes(k)) score++;
-    }
-    if(score > bestScore){
-      bestScore = score;
-      bestAnswer = item.answer;
-    }
+function getAnswer(t){
+  t=t.toLowerCase();
+  let best=null,score=0;
+  for(const d of DATA){
+    if(d.k.includes("*")) continue;
+    let s=0;
+    for(const w of d.k){ if(t.includes(w)) s++; }
+    if(s>score){ score=s; best=d.a; }
   }
-  return bestAnswer || FALLBACK[0].answer;
+  return best || DATA.find(d=>d.k.includes("*")).a;
 }
 
-/* ===== SAUTI → MAANDISHI ===== */
-const out = document.getElementById("out");
-const micBtn = document.getElementById("mic");
-
-const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-const recog = SR ? new SR() : null;
-
-if(recog){
-  recog.lang="sw-TZ";
-  recog.interimResults=false;
-  recog.continuous=false;
+/* =========================
+   SAUTI → MAANDISHI
+========================= */
+const out=document.getElementById("out");
+const mic=document.getElementById("mic");
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+const rec=SR?new SR():null;
+if(rec){
+  rec.lang="sw-TZ";
+  rec.interimResults=false;
+  rec.continuous=false;
 }
 
-/* ===== MAANDISHI → SAUTI ===== */
-function speak(text){
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang="sw-TZ";
-  u.rate=0.95;
+/* =========================
+   MAANDISHI → SAUTI
+========================= */
+let tzVoice=null;
+speechSynthesis.onvoiceschanged=()=>{
+  const v=speechSynthesis.getVoices();
+  tzVoice=v.find(x=>x.lang.toLowerCase().includes("sw"))||v.find(x=>x.lang.toLowerCase().includes("en"));
+};
+function speak(t){
+  const u=new SpeechSynthesisUtterance(t);
+  u.lang=tzVoice?tzVoice.lang:"sw-TZ";
+  u.voice=tzVoice;
+  u.rate=.9;
   speechSynthesis.cancel();
   speechSynthesis.speak(u);
 }
 
-/* ===== MATUKIO ===== */
-micBtn.onclick=()=>{
-  if(!recog){
-    out.innerText="Browser yako haiungi mkono sauti.";
-    return;
-  }
+/* =========================
+   MATUKIO
+========================= */
+mic.onclick=()=>{
+  if(!rec){ out.innerText="Browser haiungi mkono sauti."; return; }
   out.innerText="🎧 Ninasikiliza...";
-  recog.start();
+  rec.start();
 };
-
-if(recog){
-  recog.onresult=e=>{
-    const text=e.results[0][0].transcript;
-    const ans=getAnswer(text);
-    out.innerText="🗣️ Umesema:\n"+text+"\n\n🤖 Masanja AI:\n"+ans;
-    speak(ans);
-  };
-  recog.onerror=()=>{
-    out.innerText="Kuna tatizo la sauti. Jaribu tena.";
+if(rec){
+  rec.onresult=e=>{
+    const t=e.results[0][0].transcript;
+    const a=getAnswer(t);
+    out.innerText="🗣️ Umesema:\n"+t+"\n\n🤖 Masanja AI:\n"+a;
+    speak(a);
   };
 }
 </script>
-
 </body>
 </html>
