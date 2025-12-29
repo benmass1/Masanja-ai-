@@ -6,186 +6,168 @@ here<!DOCTYPE html>
 <title>Masanja AI</title>
 
 <style>
-  * {
-    box-sizing: border-box;
-    font-family: system-ui, Arial, sans-serif;
-  }
-
-  body {
-    margin: 0;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #0f5b3e, #06251c);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-  }
-
-  .app {
-    width: 100%;
-    max-width: 420px;
-    padding: 20px;
-    text-align: center;
-  }
-
-  h1 {
-    margin-bottom: 5px;
-  }
-
-  .subtitle {
-    font-size: 14px;
-    opacity: 0.85;
-    margin-bottom: 15px;
-  }
-
-  .output {
-    background: white;
-    color: black;
-    border-radius: 12px;
-    padding: 15px;
-    min-height: 160px;
-    text-align: left;
-    margin-bottom: 20px;
-    white-space: pre-line;
-  }
-
-  .mic-btn {
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    border: none;
-    font-size: 32px;
-    background: #2ecc71;
-    cursor: pointer;
-  }
-
-  .mic-btn:active {
-    transform: scale(0.95);
-    background: #27ae60;
-  }
+*{box-sizing:border-box;font-family:system-ui,Arial}
+body{
+  margin:0;min-height:100vh;
+  background:linear-gradient(135deg,#0f5b3e,#06251c);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff
+}
+.app{width:100%;max-width:420px;padding:20px;text-align:center}
+h1{margin:5px 0}
+.sub{font-size:14px;opacity:.85;margin-bottom:12px}
+.output{
+  background:#fff;color:#000;border-radius:12px;
+  padding:15px;min-height:180px;text-align:left;
+  white-space:pre-line;margin-bottom:20px
+}
+.mic{
+  width:90px;height:90px;border-radius:50%;
+  border:none;font-size:32px;cursor:pointer;
+  background:#2ecc71
+}
+.mic:active{transform:scale(.95);background:#27ae60}
 </style>
 </head>
-<body>
 
+<body>
 <div class="app">
   <h1>🤖 Masanja AI</h1>
-  <div class="subtitle">Msaidizi wa Ufundi kwa Sauti</div>
+  <div class="sub">Msaidizi wa Ufundi kwa Sauti</div>
 
-  <div id="output" class="output">
-    Karibu Masanja AI. Bonyeza 🎤 uanze kuzungumza.
+  <div id="out" class="output">
+Karibu Masanja AI.
+Bonyeza 🎤 uongee nami.
   </div>
 
-  <button id="micBtn" class="mic-btn">🎤</button>
+  <button id="mic" class="mic">🎤</button>
 </div>
 
 <script>
-/* ===============================
-   AKILI YA MASANJA AI (DATA)
-================================ */
+/* ======================================================
+   AKILI KAMILI YA MASANJA AI (MAZUNGUMZO + UFUNDI)
+====================================================== */
 const KNOWLEDGE = [
-  {
-    keys: ["wewe ni nani", "jina lako", "unaitwa nani"],
-    answer: "Mimi ni Masanja AI, msaidizi wa ufundi kwa sauti. Nipo kukusaidia kutatua matatizo ya mashine."
-  },
-  {
-    keys: ["unafanya kazi gani", "kazi yako"],
-    answer: "Ninakusaidia kwenye hydraulic, engine, umeme, na mifumo ya mashine."
-  },
-  {
-    keys: ["hydraulic", "haina nguvu", "pressure"],
-    answer: "Hydraulic haina nguvu. Kagua kiwango cha mafuta, hali ya pump, na kama kuna hose inayovuja."
-  },
-  {
-    keys: ["engine", "haiwaki", "haianzi"],
-    answer: "Engine ikikataa kuanza, angalia betri, fuel supply, filter, na starter motor."
-  },
-  {
-    keys: ["joto", "overheat", "inachemka"],
-    answer: "Mashine ikipata joto, safisha radiator, hakikisha coolant ipo, na fan inafanya kazi."
-  }
+
+/* -------- MAZUNGUMZO YA KAWAIDA -------- */
+{keys:["habari","mambo","vipi","ukoje","niaje"],
+ answer:"Niko salama kabisa. Karibu Masanja AI. Niambie tatizo au swali lako."},
+
+{keys:["wewe ni nani","jina lako","unaitwa nani","wewe nani"],
+ answer:"Mimi ni Masanja AI, msaidizi wa ufundi kwa sauti. Nipo kukusaidia kwenye matatizo ya mashine na kazi za ufundi."},
+
+{keys:["unafanya kazi gani","kazi yako","unajua nini"],
+ answer:"Ninajua hydraulic, engine, umeme, transmission, usalama wa mashine, na mazungumzo ya kawaida."},
+
+{keys:["asante","ahsante","shukrani"],
+ answer:"Karibu sana baba. Nipo hapa kukusaidia wakati wowote."},
+
+/* -------- HYDRAULIC -------- */
+{keys:["hydraulic","hydroly","haidrolic","haidroliki","haina nguvu","pressure","haipandishi"],
+ answer:"Hydraulic ikiwa haina nguvu, kagua kiwango cha mafuta, pump, valve, na hose zinazovuja."},
+
+{keys:["hydraulic","hydroly","haidrolic","joto","inachemka","kinachemsha","overheat"],
+ answer:"Hydraulic ikipata joto, angalia mafuta kama ni machafu au pungufu, kagua oil cooler, na mfumo wa kupooza."},
+
+{keys:["hydraulic","inapiga kelele","noise","inavuma"],
+ answer:"Hydraulic ikipiga kelele, kuna hewa kwenye mfumo au pump imechoka. Bleed system na kagua pump."},
+
+/* -------- ENGINE -------- */
+{keys:["engine","injini","haiwaki","haianzi","start"],
+ answer:"Engine ikikataa kuwaka, angalia betri, fuel, filter, na starter motor."},
+
+{keys:["engine","injini","inazima","inakata"],
+ answer:"Engine ikizima ghafla, kagua fuel supply, sensor, na mfumo wa umeme."},
+
+{keys:["engine","injini","joto","overheat","inachemka"],
+ answer:"Engine ikipata joto, safisha radiator, hakikisha coolant ipo, na fan inafanya kazi."},
+
+/* -------- UMEME -------- */
+{keys:["umeme","electrical","taa","wiring","short","fuse"],
+ answer:"Tatizo la umeme hutokana na wiring mbovu, fuse kuchoma, au sensor kuharibika. Kagua connections."},
+
+/* -------- TRANSMISSION -------- */
+{keys:["gear","transmission","haibadilishi","inachelewa","slip"],
+ answer:"Transmission ikishindwa kubadilisha gear, kagua mafuta ya gearbox, clutch au solenoid."},
+
+/* -------- USALAMA -------- */
+{keys:["usalama","hatari","danger","ajali"],
+ answer:"Kabla ya kazi yoyote ya ufundi, zima mashine, vaa PPE, na hakikisha eneo ni salama."},
+
+/* -------- FALLBACK (HAIKAI KIMYA) -------- */
+{keys:["*"],
+ answer:"Nimekuelewa kwa ujumla. Tafadhali eleza zaidi au taja mfumo kama hydraulic, engine, umeme au joto la mashine."}
+
 ];
 
-/* ===============================
+/* ======================================================
    SAUTI → MAANDISHI
-================================ */
-const SpeechRecognition =
-  window.SpeechRecognition || window.webkitSpeechRecognition;
+====================================================== */
+const out = document.getElementById("out");
+const micBtn = document.getElementById("mic");
 
-const output = document.getElementById("output");
-const micBtn = document.getElementById("micBtn");
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+if(!SR){ out.innerText="Browser yako haiungi mkono sauti."; }
 
-if (!SpeechRecognition) {
-  output.innerText = "Browser yako haiungi mkono sauti.";
+const recog = SR ? new SR() : null;
+if(recog){
+  recog.lang="sw-TZ";
+  recog.interimResults=false;
+  recog.continuous=false;
 }
 
-const recognition = SpeechRecognition ? new SpeechRecognition() : null;
-
-if (recognition) {
-  recognition.lang = "sw-TZ";
-  recognition.interimResults = false;
-  recognition.continuous = false;
-}
-
-/* ===============================
+/* ======================================================
    MAANDISHI → SAUTI
-================================ */
-function speak(text) {
+====================================================== */
+function speak(text){
   const u = new SpeechSynthesisUtterance(text);
-  u.lang = "sw-TZ";
-  u.rate = 0.95;
+  u.lang="sw-TZ"; u.rate=0.95;
   speechSynthesis.cancel();
   speechSynthesis.speak(u);
 }
 
-/* ===============================
+/* ======================================================
    CHAGUA JIBU BORA
-================================ */
-function getAnswer(text) {
-  text = text.toLowerCase();
+====================================================== */
+function getAnswer(text){
+  text=text.toLowerCase();
+  let bestScore=0, best=null;
 
-  let bestScore = 0;
-  let bestAnswer = null;
-
-  for (const item of KNOWLEDGE) {
-    let score = 0;
-    for (const k of item.keys) {
-      if (text.includes(k)) score++;
+  for(const item of KNOWLEDGE){
+    if(item.keys.includes("*")) continue;
+    let score=0;
+    for(const k of item.keys){
+      if(text.includes(k)) score++;
     }
-    if (score > bestScore) {
-      bestScore = score;
-      bestAnswer = item.answer;
+    if(score>bestScore){
+      bestScore=score;
+      best=item.answer;
     }
   }
-
-  return bestAnswer || "Samahani, bado sijapata jibu sahihi. Tafadhali eleza zaidi.";
+  if(best) return best;
+  return KNOWLEDGE.find(i=>i.keys.includes("*")).answer;
 }
 
-/* ===============================
+/* ======================================================
    MATUKIO
-================================ */
-micBtn.onclick = () => {
-  if (!recognition) return;
-  output.innerText = "🎧 Ninasikiliza...";
-  recognition.start();
+====================================================== */
+micBtn.onclick=()=>{
+  if(!recog) return;
+  out.innerText="🎧 Ninasikiliza...";
+  recog.start();
 };
 
-if (recognition) {
-  recognition.onresult = (e) => {
-    const text = e.results[0][0].transcript;
-    const answer = getAnswer(text);
-
-    output.innerText =
-      "🗣️ Umesema:\n" + text +
-      "\n\n🤖 Masanja AI:\n" + answer;
-
-    speak(answer);
+if(recog){
+  recog.onresult=e=>{
+    const text=e.results[0][0].transcript;
+    const ans=getAnswer(text);
+    out.innerText="🗣️ Umesema:\n"+text+"\n\n🤖 Masanja AI:\n"+ans;
+    speak(ans);
   };
-
-  recognition.onerror = () => {
-    output.innerText = "Kuna tatizo la sauti. Jaribu tena.";
+  recog.onerror=()=>{
+    out.innerText="Kuna tatizo la sauti. Jaribu tena.";
   };
 }
 </script>
-
 </body>
 </html>
