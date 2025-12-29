@@ -1,12 +1,12 @@
-* {
+here* {
   box-sizing: border-box;
   font-family: system-ui, Arial, sans-serif;
 }
 
 body {
   margin: 0;
-  background: linear-gradient(135deg, #0f5b3e, #06251c);
   min-height: 100vh;
+  background: linear-gradient(135deg, #0f5b3e, #06251c);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -20,32 +20,29 @@ body {
   text-align: center;
 }
 
-h1 {
-  margin-bottom: 5px;
-}
-
 .subtitle {
   font-size: 14px;
   opacity: 0.8;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .output {
   background: white;
   color: black;
-  padding: 15px;
   border-radius: 12px;
-  min-height: 120px;
-  margin-bottom: 20px;
+  padding: 15px;
+  min-height: 140px;
   text-align: left;
+  margin-bottom: 20px;
+  white-space: pre-line;
 }
 
 .mic-btn {
-  width: 80px;
-  height: 80px;
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
   border: none;
-  font-size: 30px;
+  font-size: 32px;
   background: #2ecc71;
   cursor: pointer;
 }
