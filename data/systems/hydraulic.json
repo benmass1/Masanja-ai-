@@ -1,0 +1,13 @@
+{
+  "system": "hydraulic",
+  "problems": [
+    {
+      "keywords": ["haina nguvu", "pressure ndogo", "haipandishi"],
+      "answer": "Tatizo la hydraulic pressure. Angalia kiwango cha mafuta ya hydraulic, hali ya pump, na kama kuna hose inayovuja."
+    },
+    {
+      "keywords": ["ina joto", "overheat"],
+      "answer": "Hydraulic inapata joto. Hakikisha mafuta ni sahihi, radiator ya oil iko safi, na cooling fan inafanya kazi."
+    }
+  ]
+}
