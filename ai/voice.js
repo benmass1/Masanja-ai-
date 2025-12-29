@@ -24,3 +24,18 @@ export function startListening(onResult, onError) {
 
   recognition.start();
 }
+// Fanya AI izungumze (Text → Speech)
+export function speak(text) {
+  if (!window.speechSynthesis) {
+    console.log("Speech synthesis haipatikani");
+    return;
+  }
+
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = "sw-TZ";
+  utterance.rate = 0.95;
+  utterance.pitch = 1;
+
+  window.speechSynthesis.cancel(); // simamisha sauti nyingine
+  window.speechSynthesis.speak(utterance);
+}
