@@ -1,5 +1,4 @@
-
-<!DOCTYPE html>
+here<!DOCTYPE html>
 <html lang="sw">
 <head>
 <meta charset="UTF-8">
@@ -14,29 +13,21 @@ body{
   display:flex;align-items:center;justify-content:center;
   color:#fff
 }
-.app{
-  width:100%;max-width:440px;
-  padding:20px;text-align:center
-}
+.app{width:100%;max-width:440px;padding:20px;text-align:center}
 .logo{
-  width:120px;height:120px;
-  border-radius:50%;
-  object-fit:cover;
-  border:4px solid #2ecc71;
-  margin-bottom:10px
+  width:120px;height:120px;border-radius:50%;
+  object-fit:cover;border:4px solid #2ecc71;margin-bottom:10px
 }
 h1{margin:6px 0}
 .sub{font-size:14px;opacity:.85;margin-bottom:12px}
 .output{
   background:#fff;color:#000;border-radius:12px;
-  padding:15px;min-height:200px;
-  text-align:left;white-space:pre-line;
-  margin-bottom:20px
+  padding:15px;min-height:220px;
+  text-align:left;white-space:pre-line;margin-bottom:20px
 }
 .mic{
   width:90px;height:90px;border-radius:50%;
-  border:none;font-size:32px;cursor:pointer;
-  background:#2ecc71
+  border:none;font-size:32px;cursor:pointer;background:#2ecc71
 }
 .mic:active{transform:scale(.95);background:#27ae60}
 </style>
@@ -44,12 +35,9 @@ h1{margin:6px 0}
 
 <body>
 <div class="app">
-
-  <!-- Picha ya Masanja (badilisha src ukitaka) -->
   <img class="logo" src="https://i.imgur.com/8Km9tLL.png" alt="Masanja AI">
-
   <h1>Masanja AI</h1>
-  <div class="sub">Msaidizi wa Ufundi – Kiswahili cha Afrika Mashariki</div>
+  <div class="sub">Msaidizi wa Ufundi – Kiswahili Afrika Mashariki</div>
 
   <div id="out" class="output">
 Karibu Masanja AI.  
@@ -61,37 +49,60 @@ Bonyeza 🎤 uongee nami.
 
 <script>
 /* =================================================
-   MAZUNGUMZO + UFUNDI (EAST AFRICA SWAHILI)
-   Mfumo huu unaweza kufika 1000+ entries
+   MSAMIATI MPANA WA UFUNDI (ONDEKA NA KUONGEZA)
 ================================================= */
 
 const DATA = [
 
 /* ===== MAZUNGUMZO YA KAWAIDA ===== */
-{k:["vipi","mambo","niaje","ukoje","poa"],a:"Poa kabisa baba. Niko hapa, sema shida yako."},
-{k:["asante","ahsante","shukrani"],a:"Karibu sana. Kazi yangu kukusaidia."},
-{k:["nisaidie","msaada","nipe msaada"],a:"Sawa, eleza tatizo polepole."},
-{k:["wewe ni nani","jina lako"],a:"Mimi ni Masanja AI, msaidizi wako wa ufundi wa Afrika Mashariki."},
-{k:["unasikia","upo hapo"],a:"Nakusikia vizuri kabisa. Endelea."},
+{k:["vipi","mambo","niaje","ukoje","poa"],a:"Poa kabisa. Nipo tayari, sema tatizo."},
+{k:["asante","ahsante","shukrani"],a:"Karibu. Endelea kuuliza."},
+{k:["nisaidie","msaada","nipe msaada"],a:"Sawa, eleza dalili zote."},
+{k:["wewe ni nani","jina lako"],a:"Mimi ni Masanja AI, msaidizi wako wa ufundi."},
+{k:["unasikia","upo hapo"],a:"Nakusikia vizuri. Endelea."},
 
-/* ===== HYDRAULIC ===== */
-{k:["hydraulic","hydroly","haidrolic","haina nguvu"],a:"Hydraulic ikikosa nguvu, angalia kiwango cha mafuta, pump na pressure valve."},
-{k:["hydraulic","inachemka","kinachemsha","joto"],a:"Hydraulic ikipata joto kali, oil cooler inaweza kuwa imeziba au mafuta ni machafu."},
-{k:["hydraulic","inavuma","kelele"],a:"Kelele kwenye hydraulic mara nyingi ni hewa kwenye mfumo au pump imechoka."},
-{k:["boom","mkono","haipandi"],a:"Boom isipopanda, kagua control valve na pressure ya pump."},
+/* ===== HYDRAULIC – NGUVU & MWENDO ===== */
+{k:["hydraulic","hydroly","haidrolic","haina nguvu","pressure ndogo"],a:"Hydraulic ikikosa nguvu: kagua kiwango cha mafuta, hali ya pump, pressure relief valve, na filters."},
+{k:["hydraulic","slow","inachelewa","mwendo mdogo"],a:"Mwendo mdogo wa hydraulic: mafuta machafu, filter imeziba, au pump imechoka."},
+{k:["hydraulic","haipandishi","boom haipandi","arm haifanyi"],a:"Haipandishi: kagua control valve, spool, cylinder seals, na pressure ya pump."},
 
-/* ===== ENGINE ===== */
-{k:["engine","injini","haiwaki","haianzi"],a:"Injini ikigoma kuwaka, anza na betri, mafuta yanafika na starter."},
-{k:["engine","inachemka","joto"],a:"Injini ikipata joto, safisha radiator na hakikisha coolant ipo."},
-{k:["engine","inazima","inakufa"],a:"Injini ikizima ghafla, kuna shida ya mafuta au sensor."},
-{k:["moshi mweusi"],a:"Moshi mweusi unaonyesha mafuta mengi au air filter imeziba."},
+/* ===== HYDRAULIC – JOTO & KELELE ===== */
+{k:["hydraulic","inachemka","kinachemsha","joto kali","overheat"],a:"Hydraulic ikipata joto: angalia oil cooler, fan, airflow, na aina ya mafuta."},
+{k:["hydraulic","inavuma","kelele","noise","cavitation"],a:"Kelele/cavitation: kuna hewa kwenye mfumo, suction line imeziba au pump inavuta hewa."},
+
+/* ===== HYDRAULIC – UVUJAJI ===== */
+{k:["hydraulic","inavuja","oil inatoka","leak","hose"],a:"Uvujaji wa mafuta: kagua hose, fittings, seals, O-rings na tightening."},
+{k:["cylinder","seal","inavuja"],a:"Cylinder ikivuja: seals zimechoka, zinahitaji kubadilishwa."},
+
+/* ===== ENGINE – KUANZA ===== */
+{k:["engine","injini","haiwaki","haianzi","start"],a:"Injini isipoanza: angalia betri, starter, relay, fuel supply na air filter."},
+{k:["starter","inazunguka polepole"],a:"Starter polepole: betri dhaifu, cables zimelegea au starter imechoka."},
+
+/* ===== ENGINE – JOTO & BARIDI ===== */
+{k:["engine","inachemka","joto","overheat"],a:"Joto la injini: safisha radiator, hakikisha coolant ipo, fan na thermostat vinafanya kazi."},
+{k:["coolant","maji yanapungua"],a:"Coolant ikipungua: kuna leak kwenye hoses, radiator au water pump."},
+
+/* ===== ENGINE – MOSHI & SAUTI ===== */
+{k:["engine","moshi mweusi"],a:"Moshi mweusi: mafuta mengi, air filter imeziba au injector ina shida."},
+{k:["engine","moshi mweupe"],a:"Moshi mweupe: maji yanaingia kwenye combustion au injector baridi."},
+{k:["engine","knocking","sauti mbaya"],a:"Knocking: timing mbaya, lubrication duni au fuel quality."},
+
+/* ===== LUBRICATION ===== */
+{k:["oil pressure","shinikizo la mafuta","oil light"],a:"Oil pressure ikishuka: angalia kiwango cha mafuta, oil pump na oil filter."},
+{k:["oil","mafuta yanachafuka"],a:"Mafuta yakichafuka haraka: badilisha oil, kagua seals na combustion."},
 
 /* ===== UMEME ===== */
-{k:["umeme","taa","light","hazifanyi"],a:"Tatizo la umeme, kagua fuse, wiring na betri."},
-{k:["starter","haizunguki"],a:"Starter isipozunguka, betri au relay inaweza kuwa na shida."},
+{k:["umeme","taa hazifanyi","light zimekufa"],a:"Umeme wa taa: kagua fuse, wiring, switch na ground."},
+{k:["battery","betri imekufa","voltage"],a:"Betri: pima voltage, kagua terminals na alternator."},
+{k:["alternator","haichaji"],a:"Alternator haichaji: kagua belt, wiring na alternator yenyewe."},
+{k:["sensor","error","check engine"],a:"Error ya sensor: kagua wiring, connector au sensor ibadilishwe."},
+
+/* ===== TRANSMISSION / DRIVE ===== */
+{k:["gear","transmission","haibadilishi","inachelewa"],a:"Transmission: kagua mafuta ya gearbox, solenoids na clutch packs."},
+{k:["drive","traction","haina nguvu"],a:"Drive haina nguvu: kagua differential, final drives na mafuta."},
 
 /* ===== FALLBACK ===== */
-{k:["*"],a:"Nimekuelewa kwa ujumla. Tafadhali eleza zaidi au taja kama ni hydraulic, injini au umeme."}
+{k:["*"],a:"Nimekuelewa kwa ujumla. Eleza zaidi dalili, muda lilipoanza, na mfumo unaohusika."}
 ];
 
 function getAnswer(t){
@@ -106,44 +117,25 @@ function getAnswer(t){
   return best || DATA.find(d=>d.k.includes("*")).a;
 }
 
-/* ======================
-   SAUTI – MALE VOICE
-====================== */
-let maleVoice=null;
-
-function loadVoices(){
+/* ===== SAUTI: MOJA TU YA KIUME ===== */
+let voiceChosen=null;
+function initVoice(){
   const voices=speechSynthesis.getVoices();
-
-  // jaribu Kiswahili
-  maleVoice=voices.find(v =>
-    v.lang.toLowerCase().includes("sw") &&
-    v.name.toLowerCase().includes("male")
-  );
-
-  // fallback Africa/English male
-  if(!maleVoice){
-    maleVoice=voices.find(v =>
-      v.lang.toLowerCase().includes("en") &&
-      v.name.toLowerCase().includes("male")
-    );
-  }
+  if(voices.length>0){ voiceChosen=voices[0]; }
 }
-
-speechSynthesis.onvoiceschanged=loadVoices;
+speechSynthesis.onvoiceschanged=initVoice;
 
 function speak(text){
-  if(!maleVoice) loadVoices();
+  if(!voiceChosen) initVoice();
   const u=new SpeechSynthesisUtterance(text);
-  u.voice=maleVoice;
-  u.rate=0.9;
-  u.pitch=0.9;
+  u.voice=voiceChosen;
+  u.rate=0.85;   // tulivu
+  u.pitch=0.7;   // kiume
   speechSynthesis.cancel();
   speechSynthesis.speak(u);
 }
 
-/* ======================
-   SPEECH RECOGNITION
-====================== */
+/* ===== SPEECH RECOGNITION ===== */
 const out=document.getElementById("out");
 const mic=document.getElementById("mic");
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
@@ -156,10 +148,7 @@ if(rec){
 }
 
 mic.onclick=()=>{
-  if(!rec){
-    out.innerText="Browser yako haiungi mkono sauti.";
-    return;
-  }
+  if(!rec){ out.innerText="Browser haiungi mkono sauti."; return; }
   out.innerText="🎧 Ninasikiliza...";
   rec.start();
 };
@@ -173,6 +162,5 @@ if(rec){
   };
 }
 </script>
-
 </body>
 </html>
