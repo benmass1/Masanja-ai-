@@ -8,8 +8,10 @@ micBtn.addEventListener("click", () => {
   responseBox.innerText = "🎧 Masanja AI inasikiliza...";
 
   startListening(
-    (text) => {
-      const answer = getAnswer(text);
+    async (text) => {
+      responseBox.innerText = "⏳ Masanja AI inachakata...";
+
+      const answer = await getAnswer(text);
 
       responseBox.innerText =
         "🗣️ Umesema:\n" +
