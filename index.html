@@ -1,86 +1,177 @@
-here<!DOCTYPE html>
-<html lang="en">
+
+<!DOCTYPE html>
+<html lang="sw">
 <head>
 <meta charset="UTF-8">
-<title>Masanja AI</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Masanja AI</title>
 
 <style>
-body{font-family:Arial;background:#0f5b3e;color:#fff;display:flex;justify-content:center}
-.app{max-width:500px;width:100%;padding:20px}
-.output{background:#fff;color:#000;padding:15px;border-radius:8px;min-height:200px}
-input,button{width:100%;padding:10px;margin-top:10px}
-button{background:#2ecc71;border:none}
+*{box-sizing:border-box;font-family:system-ui,Arial}
+body{
+  margin:0;min-height:100vh;
+  background:linear-gradient(135deg,#0f5b3e,#06251c);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff
+}
+.app{width:100%;max-width:460px;padding:20px;text-align:center}
+h1{margin:6px 0}
+.sub{font-size:14px;opacity:.85;margin-bottom:12px}
+.output{
+  background:#fff;color:#000;border-radius:12px;
+  padding:15px;min-height:230px;
+  text-align:left;white-space:pre-line;margin-bottom:16px
+}
+.mic{
+  width:90px;height:90px;border-radius:50%;
+  border:none;font-size:32px;cursor:pointer;background:#2ecc71
+}
+.mic:active{transform:scale(.95);background:#27ae60}
 </style>
 </head>
 
 <body>
 <div class="app">
-<h2>Masanja AI</h2>
+  <h1>Masanja AI</h1>
+  <div class="sub">Technical Assistant — Swahili (Kenya) Voice</div>
 
-<div id="out" class="output">Type your technical problem.</div>
+  <div id="out" class="output">
+Karibu Masanja AI.  
+Bonyeza 🎤 uongee nami (Kiswahili).
+  </div>
 
-<input id="q" placeholder="Type here (Swahili or English)">
-<button onclick="ask()">Ask</button>
+  <button id="mic" class="mic">🎤</button>
 </div>
 
 <script>
-/* =========================================
-   MASSIVE KNOWLEDGE GENERATOR (MB SCALE)
-========================================= */
+/* =================================================
+   KNOWLEDGE BASE (MASWALI & MAJIBU YA KIUFUNDI — MENGI)
+   INPUT: Kiswahili / English
+   OUTPUT: Kiswahili (Kenya style)
+================================================= */
 
-// base templates (short but powerful)
-const hydraulicTemplates = [
-  "Low hydraulic power may be caused by low oil level, worn pump, blocked filter, or pressure valve failure.",
-  "Hydraulic overheating can occur due to dirty oil, restricted oil cooler, poor airflow, or incorrect oil viscosity.",
-  "Hydraulic noise or cavitation indicates air in the system, suction restriction, or pump wear."
+const DATA = [
+
+/* ===== GENERAL / CONVERSATION ===== */
+{k:["vipi","mambo","niaje","ukoje","poa"],a:"Poa kabisa. Niko tayari kukusaidia. Eleza tatizo."},
+{k:["asante","ahsante","shukrani"],a:"Karibu sana. Uliza chochote cha ufundi."},
+{k:["wewe ni nani","jina lako"],a:"Mimi ni Masanja AI, msaidizi wa masuala ya ufundi."},
+{k:["nisaidie","msaada","help"],a:"Sawa. Eleza dalili zote za tatizo."},
+
+/* ===== HYDRAULIC — POWER ===== */
+{k:["hydraulic","haina nguvu","pressure ndogo"],a:"Hydraulic ikikosa nguvu, angalia kiwango cha mafuta, hali ya pump, pressure relief valve, na filters."},
+{k:["hydraulic","slow","inachelewa"],a:"Mwendo wa hydraulic ukichelewa, mafuta yanaweza kuwa machafu, filter imeziba, au pump imechoka."},
+{k:["hydraulic","haipandishi","boom haipandi"],a:"Boom isipopanda, kagua control valve, spool valves, cylinder seals, na pressure ya mfumo."},
+
+/* ===== HYDRAULIC — HEAT & NOISE ===== */
+{k:["hydraulic","inachemka","joto","overheat"],a:"Hydraulic ikipata joto, angalia oil cooler, airflow, fan, na aina ya mafuta (viscosity sahihi)."},
+{k:["hydraulic","kelele","inavuma","cavitation"],a:"Kelele au cavitation hutokea kama kuna hewa kwenye mfumo, suction line imeziba, au pump imechoka."},
+
+/* ===== HYDRAULIC — LEAKS ===== */
+{k:["hydraulic","inavuja","oil inatoka","leak"],a:"Uvujaji wa mafuta hutokana na hose zilizochoka, fittings legevu, seals au O-rings kuharibika."},
+{k:["cylinder","seal","inavuja"],a:"Cylinder ikivuja, seals zimechoka na zinahitaji kubadilishwa."},
+
+/* ===== ENGINE — STARTING ===== */
+{k:["engine","injini","haiwaki","haianzi"],a:"Injini isipoanza, kagua betri, starter motor, relay, fuel supply, na air filter."},
+{k:["starter","inazunguka polepole"],a:"Starter ikizunguka polepole, betri inaweza kuwa dhaifu, cables zimelegea, au starter imechoka."},
+
+/* ===== ENGINE — HEAT & COOLING ===== */
+{k:["engine","inachemka","joto","overheat"],a:"Joto la injini hutokana na coolant pungufu, radiator chafu, thermostat mbovu, au fan isiyofanya kazi."},
+{k:["coolant","maji yanapungua"],a:"Coolant ikipungua, kuna uvujaji kwenye hoses, radiator, au water pump."},
+
+/* ===== ENGINE — EXHAUST & NOISE ===== */
+{k:["engine","moshi mweusi"],a:"Moshi mweusi unaashiria mafuta mengi, air filter imeziba, au injector ina shida."},
+{k:["engine","moshi mweupe"],a:"Moshi mweupe unaweza kuonyesha maji kuingia kwenye combustion au injini baridi."},
+{k:["engine","knocking","sauti mbaya"],a:"Knocking husababishwa na timing mbaya, lubrication duni, au ubora mbaya wa mafuta."},
+
+/* ===== LUBRICATION ===== */
+{k:["oil pressure","oil light","shinikizo la mafuta"],a:"Oil pressure ikishuka, kagua kiwango cha mafuta, oil pump, na oil filter."},
+{k:["oil","mafuta yanachafuka"],a:"Mafuta yakichafuka haraka, badilisha oil na kagua seals na hali ya combustion."},
+
+/* ===== ELECTRICAL ===== */
+{k:["umeme","taa hazifanyi","lights not working"],a:"Tatizo la umeme linaweza kutokana na fuse kuchoma, wiring kuharibika, au ground mbovu."},
+{k:["battery","betri imekufa"],a:"Betri ikikufa, pima voltage, kagua terminals, na mfumo wa kuchaji."},
+{k:["alternator","haichaji"],a:"Alternator isipochaji, kagua belt, wiring, na alternator yenyewe."},
+{k:["sensor","error","check engine"],a:"Sensor ikitoa error, kagua connectors, wiring, au badilisha sensor."},
+
+/* ===== TRANSMISSION / DRIVE ===== */
+{k:["gear","transmission","haibadilishi"],a:"Tatizo la kubadilisha gear hutokana na mafuta pungufu, solenoids mbovu, au clutch packs kuchoka."},
+{k:["drive","traction","haina nguvu"],a:"Drive ikikosa nguvu, kagua differential, final drives, na mafuta yake."},
+
+/* ===== FALLBACK ===== */
+{k:["*"],a:"Nimekuelewa kwa ujumla. Tafadhali eleza zaidi dalili, muda tatizo lilipoanza, na mfumo unaohusika."}
 ];
 
-const engineTemplates = [
-  "Engine not starting can be caused by battery failure, starter motor issues, fuel supply problems, or air restriction.",
-  "Engine overheating may be due to low coolant level, clogged radiator, faulty thermostat, or cooling fan failure.",
-  "Black exhaust smoke indicates excessive fuel delivery or restricted air intake."
-];
-
-const electricalTemplates = [
-  "Electrical faults may result from blown fuses, damaged wiring, poor grounding, or faulty switches.",
-  "Battery charging problems can be caused by alternator failure, loose belts, or corroded terminals."
-];
-
-// generate BIG knowledge (thousands of entries)
-const KNOWLEDGE = [];
-
-for(let i=0;i<4000;i++){   // 4000 x ~200 chars ≈ ~800 KB+
-  hydraulicTemplates.forEach(t=>{
-    KNOWLEDGE.push({k:["hydraulic","pressure","power"],a:t+" Reference ID H-"+i});
-  });
-  engineTemplates.forEach(t=>{
-    KNOWLEDGE.push({k:["engine","start","overheat"],a:t+" Reference ID E-"+i});
-  });
-  electricalTemplates.forEach(t=>{
-    KNOWLEDGE.push({k:["electrical","battery","wiring"],a:t+" Reference ID EL-"+i});
-  });
-}
-
-// fallback
-KNOWLEDGE.push({k:["*"],a:"Please provide more technical details about the issue."});
-
-function getAnswer(text){
-  text=text.toLowerCase();
-  for(const item of KNOWLEDGE){
-    for(const w of item.k){
-      if(text.includes(w)) return item.a;
-    }
+function getAnswer(t){
+  t=t.toLowerCase();
+  let best=null,score=0;
+  for(const d of DATA){
+    if(d.k.includes("*")) continue;
+    let s=0;
+    for(const w of d.k){ if(t.includes(w)) s++; }
+    if(s>score){ score=s; best=d.a; }
   }
-  return KNOWLEDGE[KNOWLEDGE.length-1].a;
+  return best || DATA.find(d=>d.k.includes("*")).a;
 }
 
-function ask(){
-  const q=document.getElementById("q").value;
-  if(!q) return;
-  const a=getAnswer(q);
-  document.getElementById("out").innerText =
-    "You:\n"+q+"\n\nMasanja AI:\n"+a;
+/* ======================
+   SAUTI — KISWAHILI (KENYA) KIPAUMBELE
+====================== */
+let voiceKE=null;
+
+function loadVoiceKE(){
+  const voices = speechSynthesis.getVoices();
+  // Kipaumbele: sw-KE
+  voiceKE = voices.find(v => v.lang && v.lang.toLowerCase().includes("sw-ke"));
+  // Fallback: sw yoyote
+  if(!voiceKE){
+    voiceKE = voices.find(v => v.lang && v.lang.toLowerCase().startsWith("sw"));
+  }
+  // Mwisho kabisa: voice ya kwanza iliyopo
+  if(!voiceKE && voices.length>0){
+    voiceKE = voices[0];
+  }
+}
+speechSynthesis.onvoiceschanged = loadVoiceKE;
+
+function speak(text){
+  if(!voiceKE) loadVoiceKE();
+  const u = new SpeechSynthesisUtterance(text);
+  u.voice = voiceKE;
+  u.lang = voiceKE && voiceKE.lang ? voiceKE.lang : "sw-KE";
+  u.rate = 0.9;   // asilia
+  u.pitch = 0.95; // asilia
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+}
+
+/* ======================
+   SPEECH RECOGNITION
+====================== */
+const out=document.getElementById("out");
+const mic=document.getElementById("mic");
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+const rec=SR?new SR():null;
+
+if(rec){
+  rec.lang="sw-KE"; // mtumiaji aongee Kiswahili
+  rec.interimResults=false;
+  rec.continuous=false;
+}
+
+mic.onclick=()=>{
+  if(!rec){ out.innerText="Browser yako haiungi mkono sauti."; return; }
+  out.innerText="🎧 Ninasikiliza...";
+  rec.start();
+};
+
+if(rec){
+  rec.onresult=e=>{
+    const t=e.results[0][0].transcript;
+    const a=getAnswer(t);
+    out.innerText="🗣️ Umesema:\n"+t+"\n\n🤖 Masanja AI:\n"+a;
+    speak(a);
+  };
 }
 </script>
 </body>
