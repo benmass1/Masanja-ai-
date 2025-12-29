@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="sw">
 <head>
@@ -48,6 +47,7 @@ Bonyeza 🎤 uongee nami.
    KNOWLEDGE BASE — MAJIBU YA KIUFUNDI (MENGI)
 ================================================= */
 const DATA = [
+
   // GENERAL
   {k:["vipi","mambo","niaje","ukoje","poa"],a:"Poa kabisa. Eleza tatizo la ufundi lilivyo."},
   {k:["nisaidie","msaada","help"],a:"Sawa. Nipe dalili zote."},
@@ -73,276 +73,14 @@ const DATA = [
   // TRANSMISSION
   {k:["gear","transmission","haibadilishi"],a:"Tatizo la kubadilisha gear hutokana na mafuta pungufu au solenoids mbovu."},
 
-/* =======================
-   BLOCK KUBWA – MAZUNGUMZO YA KAWAIDA
-======================= */
-{
-  k:["habari za kazi","kazi zinaendaje"],
-  a:"Kazi zinaendelea. Eleza changamoto uliyonayo sasa."
-},
-{
-  k:["leo nimechoka sana"],
-  a:"Pole sana. Ufundi unahitaji uvumilivu, pumzika kidogo halafu tuendelee."
-},
-{
-  k:["niko kazini site"],
-  a:"Sawa. Hakikisha usalama kwanza kabla ya kuendelea na kazi."
-},
-{
-  k:["niko gereji"],
-  a:"Vizuri. Gereji ndiyo mahali sahihi pa kufanya uchunguzi wa kina."
-},
-{
-  k:["nataka kujifunza zaidi"],
-  a:"Hilo ni jambo jema. Kujifunza ufundi ni mchakato wa kila siku."
-},
+  // TRANSMISSION & DRIVE
+  {k:["gear","inapiga kelele kubadilisha"],a:"Kelele wakati wa kubadilisha gear huonyesha clutch au gear zimechoka."},
+  {k:["gear","inachelewa kuingia forward"],a:"Kuchelewa kuingia forward huashiria mafuta pungufu kwenye transmission."},
+  {k:["transmission","inapata joto"],a:"Transmission ikipata joto, angalia oil level na oil cooler."},
+  {k:["final drive","inavuja mafuta"],a:"Uvujaji kwenye final drive huonyesha seal kuharibika."},
+  {k:["differential","inatoa kelele"],a:"Kelele kwenye differential huonyesha gear au bearing zimechoka."},
 
-/* =======================
-   BLOCK KUBWA – HYDRAULIC
-======================= */
-{
-  k:["hydraulic","boom","inashuka haraka"],
-  a:"Boom ikishuka haraka, check flow control valve au cylinder seals zimechoka."
-},
-{
-  k:["hydraulic","boom","inashindwa kushika mzigo"],
-  a:"Hii huashiria pressure ndogo au valve inavuja internally."
-},
-{
-  k:["hydraulic","arm","inatetemeka kazini"],
-  a:"Arm ikitetemeka, kuna hewa kwenye mfumo au pump haifanyi kazi sawasawa."
-},
-{
-  k:["hydraulic","bucket","inachelewa kufunga"],
-  a:"Bucket ikichelewa, spool valve inaweza kuwa chafu au mafuta ni mazito."
-},
-{
-  k:["hydraulic","oil","inapata povu"],
-  a:"Mafuta yakipata povu, kuna hewa inaingia kwenye mfumo wa suction."
-},
-{
-  k:["hydraulic","pressure","inapanda kushuka"],
-  a:"Pressure isiyo stable huashiria relief valve au pump ina matatizo."
-},
-{
-  k:["hydraulic","hose","inapasuka mara kwa mara"],
-  a:"Hose kupasuka mara kwa mara huonyesha pressure kubwa au hose siyo sahihi."
-},
-{
-  k:["hydraulic","filter","inaziba haraka"],
-  a:"Filter ikiziba haraka, system ina uchafu mwingi au mafuta ni machafu."
-},
-
-/* =======================
-   BLOCK KUBWA – ENGINE
-======================= */
-{
-  k:["engine","inazima nikiweka mzigo"],
-  a:"Injini ikizima ukiweka mzigo, fuel supply au air flow inaweza kuwa shida."
-},
-{
-  k:["engine","inatetemeka kazini"],
-  a:"Kutetemeka huashiria injector moja haifanyi kazi vizuri."
-},
-{
-  k:["engine","power inapungua mchana"],
-  a:"Power ikipungua mchana, engine inapata joto au fuel quality ni mbaya."
-},
-{
-  k:["engine","inatema mafuta"],
-  a:"Injini ikitupa mafuta, crankcase pressure inaweza kuwa kubwa."
-},
-{
-  k:["engine","oil pressure inapotea"],
-  a:"Kupotea kwa oil pressure ni hatari, zima injini na kagua oil pump."
-},
-{
-  k:["engine","moshi mweusi mwingi"],
-  a:"Moshi mweusi mwingi huonyesha mafuta mengi au air intake imeziba."
-},
-{
-  k:["engine","moshi wa bluu"],
-  a:"Moshi wa bluu unaonyesha mafuta yanaingia kwenye combustion chamber."
-},
-{
-  k:["engine","starter inachelewa"],
-  a:"Starter kuchelewa huashiria betri dhaifu au starter imechoka."
-},
-
-/* =======================
-   BLOCK KUBWA – UMEME
-======================= */
-{
-  k:["umeme","hakuna power kabisa"],
-  a:"Hakuna power kabisa, kagua main switch, fuse kuu na betri."
-},
-{
-  k:["umeme","machine inazima ghafla"],
-  a:"Kuzima ghafla huashiria loose connection au sensor mbovu."
-},
-{
-  k:["umeme","voltage inapanda kushuka"],
-  a:"Voltage isiyo stable huonyesha alternator au regulator ina shida."
-},
-{
-  k:["umeme","taa zinapungua mwanga"],
-  a:"Taa kupungua mwanga huashiria betri au alternator haifanyi kazi vizuri."
-},
-{
-  k:["umeme","starter relay inachemka"],
-  a:"Relay ikipata joto, kuna overload au short circuit."
-},
-{
-  k:["umeme","wiring inanuka moto"],
-  a:"Harufu ya moto kwenye wiring ni hatari, zima mashine mara moja."
-},
-
-/* =======================
-   BLOCK KUBWA – TRANSMISSION & DRIVE
-======================= */
-{
-  k:["gear","inapiga kelele kubadilisha"],
-  a:"Kelele wakati wa kubadilisha gear huonyesha clutch au gear zimechoka."
-},
-{
-  k:["gear","inachelewa kuingia forward"],
-  a:"Kuchelewa kuingia forward huashiria mafuta pungufu kwenye transmission."
-},
-{
-  k:["transmission","inapata joto"],
-  a:"Transmission ikipata joto, angalia oil level na oil cooler."
-},
-{
-  k:["final drive","inavuja mafuta"],
-  a:"Uvujaji kwenye final drive huonyesha seal kuharibika."
-},
-{
-  k:["differential","inatoa kelele"],
-  a:"Kelele kwenye differential huonyesha gear au bearing zimechoka."
-}
-
-
-/* =======================
-   BLOCK JINGINE – OPERETA & KAZI SITE
-======================= */
-{
-  k:["niko site","kazi site"],
-  a:"Sawa. Hakikisha usalama kwanza, vaa PPE kabla ya kuendelea."
-},
-{
-  k:["mashine iko kazini muda mrefu"],
-  a:"Mashine ikifanya kazi muda mrefu, hakikisha inapumzishwa na mafuta yakaguliwe."
-},
-{
-  k:["mashine mpya"],
-  a:"Mashine mpya inahitaji break-in period, usiibebeshe mzigo mkubwa mapema."
-},
-{
-  k:["operator anachoka"],
-  a:"Operator akichoka, hatari ya ajali inaongezeka. Pumzika kabla ya kuendelea."
-},
-
-/* =======================
-   BLOCK JINGINE – HYDRAULIC (ADVANCED)
-======================= */
-{
-  k:["hydraulic","pressure inapotea ghafla"],
-  a:"Pressure ikipotea ghafla, relief valve inaweza kuwa stuck open au pump imeharibika."
-},
-{
-  k:["hydraulic","oil inarudi tank"],
-  a:"Oil kurudi tank bila kufanya kazi huashiria internal leakage kwenye valve."
-},
-{
-  k:["hydraulic","control lever ngumu"],
-  a:"Lever ikiwa ngumu, linkage imekauka au valve imechafuka."
-},
-{
-  k:["hydraulic","cylinder inasukuma lakini hairudi"],
-  a:"Cylinder ikisukuma bila kurudi, return line imeziba au valve imekwama."
-},
-{
-  k:["hydraulic","hose inatetemeka"],
-  a:"Hose ikitetemeka, pressure fluctuation ipo au hose haijafungwa vizuri."
-},
-{
-  k:["hydraulic","oil inanuka"],
-  a:"Harufu kali ya mafuta huonyesha overheating au mafuta yameharibika."
-},
-
-/* =======================
-   BLOCK JINGINE – ENGINE (ADVANCED)
-======================= */
-{
-  k:["engine","inawaka kwa shida asubuhi"],
-  a:"Kuwaka kwa shida asubuhi huashiria glow plugs au compression kuwa chini."
-},
-{
-  k:["engine","inatema moshi asubuhi"],
-  a:"Moshi asubuhi unaweza kuwa kawaida, lakini ukizidi ni dalili ya injector au rings."
-},
-{
-  k:["engine","inapiga backfire"],
-  a:"Backfire huashiria timing mbaya au valve problems."
-},
-{
-  k:["engine","fuel consumption kubwa"],
-  a:"Matumizi makubwa ya mafuta huashiria injector, air filter au driving style."
-},
-{
-  k:["engine","rpm hazitulii"],
-  a:"RPM zisizotulia huashiria sensor, governor au air leak."
-},
-{
-  k:["engine","check engine light"],
-  a:"Check engine ikiwaka, soma error code kabla ya kuendelea na kazi."
-},
-
-/* =======================
-   BLOCK JINGINE – UMEME (ADVANCED)
-======================= */
-{
-  k:["umeme","short circuit"],
-  a:"Short circuit ni hatari. Zima power mara moja na kagua wiring."
-},
-{
-  k:["umeme","fuse inachoma mara kwa mara"],
-  a:"Fuse kuchoma mara kwa mara huonyesha overload au short circuit."
-},
-{
-  k:["umeme","sensor inasoma vibaya"],
-  a:"Sensor ikisoma vibaya, kagua connector au badilisha sensor."
-},
-{
-  k:["umeme","machine inajiwasha yenyewe"],
-  a:"Hii huonyesha wiring problem au relay stuck."
-},
-{
-  k:["umeme","ground mbaya"],
-  a:"Ground mbaya husababisha matatizo mengi ya umeme, kagua earth connections."
-},
-
-/* =======================
-   BLOCK JINGINE – USALAMA
-======================= */
-{
-  k:["usalama","safety","ajali"],
-  a:"Usalama ni muhimu. Hakikisha mashine imezimwa kabla ya matengenezo."
-},
-{
-  k:["usalama","hydraulic hose kupasuka"],
-  a:"Hose ikipasuka, mafuta yanaweza kujeruhi. Simama mbali na mashine."
-},
-{
-  k:["usalama","umeme hatari"],
-  a:"Kabla ya kugusa umeme, zima main switch na toa key."
-},
-{
-  k:["usalama","fire","moto"],
-  a:"Moto ukitokea, tumia fire extinguisher sahihi na zima mashine."
-}
-  
-  // FALLBACK
+  // FALLBACK (IBAKI MWISHO)
   {k:["*"],a:"Nimekuelewa kwa ujumla. Tafadhali eleza zaidi dalili na mfumo unaohusika."}
 ];
 
@@ -363,28 +101,14 @@ function getAnswer(t){
 ================================================= */
 let FIXED_VOICE = null;
 
-// chagua voice mara MOJA tu
 function initFixedVoice(){
   const voices = speechSynthesis.getVoices();
   if(!voices || voices.length === 0) return;
-
-  // jaribu sw-KE
-  FIXED_VOICE = voices.find(v => v.lang && v.lang.toLowerCase().includes("sw-ke"));
-
-  // fallback: sw yoyote
-  if(!FIXED_VOICE){
-    FIXED_VOICE = voices.find(v => v.lang && v.lang.toLowerCase().startsWith("sw"));
-  }
-
-  // mwisho: voice ya kwanza tu
-  if(!FIXED_VOICE){
-    FIXED_VOICE = voices[0];
-  }
-
-  // zima kubadilika tena
+  FIXED_VOICE = voices.find(v => v.lang && v.lang.toLowerCase().includes("sw-ke"))
+             || voices.find(v => v.lang && v.lang.toLowerCase().startsWith("sw"))
+             || voices[0];
   speechSynthesis.onvoiceschanged = null;
 }
-
 speechSynthesis.onvoiceschanged = initFixedVoice;
 
 function speak(text){
