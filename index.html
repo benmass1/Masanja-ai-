@@ -1,158 +1,203 @@
+
 <!DOCTYPE html>
 <html lang="sw">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Masanja AI</title>
+<title>Masanja AI | Msaidizi wa Ufundi</title>
 
 <style>
-*{box-sizing:border-box;font-family:system-ui,Arial}
+:root {
+  --primary: #2ecc71;
+  --dark: #06251c;
+  --bg: #0f5b3e;
+  --text: #ffffff;
+}
+
+*{box-sizing:border-box;font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif}
+
 body{
-  margin:0;min-height:100vh;
-  background:linear-gradient(135deg,#0f5b3e,#06251c);
-  display:flex;align-items:center;justify-content:center;
-  color:#fff
+  margin:0; min-height:100vh;
+  background: radial-gradient(circle at center, var(--bg), var(--dark));
+  display:flex; align-items:center; justify-content:center;
+  color: var(--text);
+  overflow: hidden;
 }
-.app{width:100%;max-width:460px;padding:20px;text-align:center}
-h1{margin:6px 0}
-.sub{font-size:14px;opacity:.85;margin-bottom:12px}
-.output{
-  background:#fff;color:#000;border-radius:12px;
-  padding:15px;min-height:230px;
-  text-align:left;white-space:pre-line;margin-bottom:16px
+
+.app{
+  width: 95%; max-width: 480px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(15px);
+  padding: 30px 20px;
+  border-radius: 30px;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.1);
 }
-.mic{
-  width:90px;height:90px;border-radius:50%;
-  border:none;font-size:32px;cursor:pointer;background:#2ecc71
+
+h1{ margin: 0; font-size: 28px; letter-spacing: 1px; }
+.sub{ font-size: 13px; opacity: 0.7; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 2px; }
+
+.output-container {
+  background: rgba(255, 255, 255, 0.95);
+  color: #1a1a1a;
+  border-radius: 20px;
+  padding: 20px;
+  min-height: 250px;
+  max-height: 350px;
+  overflow-y: auto;
+  text-align: left;
+  margin-bottom: 30px;
+  box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
+  position: relative;
 }
-.mic:active{transform:scale(.95);background:#27ae60}
+
+.chat-bubble { margin-bottom: 10px; line-height: 1.5; }
+.user-msg { color: #555; font-style: italic; border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 12px; }
+.ai-msg { color: var(--dark); font-weight: 500; }
+
+.controls { display: flex; flex-direction: column; align-items: center; gap: 15px; }
+
+.mic-btn {
+  width: 85px; height: 85px;
+  border-radius: 50%;
+  border: none;
+  font-size: 35px;
+  cursor: pointer;
+  background: var(--primary);
+  color: white;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 20px rgba(46, 204, 113, 0.3);
+  display: flex; align-items: center; justify-content: center;
+}
+
+.mic-btn.listening {
+  animation: pulse 1.5s infinite;
+  background: #e74c3c;
+  box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7);
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+  70% { transform: scale(1.1); box-shadow: 0 0 0 15px rgba(231, 76, 60, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+}
+
+.status-text { font-size: 14px; font-weight: 600; color: var(--primary); height: 20px; }
 </style>
 </head>
 
 <body>
 <div class="app">
-  <h1>Masanja AI</h1>
-  <div class="sub">Msaidizi wa Ufundi — Kiswahili (Kenya)</div>
+  <h1>MASANJA AI</h1>
+  <div class="sub">Mtaalamu wa Mitambo & Ufundi</div>
 
-  <div id="out" class="output">
-Karibu Masanja AI.  
-Bonyeza 🎤 uongee nami.
+  <div class="output-container" id="chatWindow">
+    <div class="chat-bubble ai-msg">
+      <b>Masanja:</b> Habari! Mimi ni msaidizi wako wa ufundi. Bonyeza mic kisha uulize kuhusu Engine, Hydraulic, au Umeme wa mitambo.
+    </div>
   </div>
 
-  <button id="mic" class="mic">🎤</button>
+  <div class="controls">
+    <div id="status" class="status-text">Tayari Kusikiliza</div>
+    <button id="mic" class="mic-btn">🎤</button>
+  </div>
 </div>
 
 <script>
 /* =================================================
-   KNOWLEDGE BASE — MAJIBU YA KIUFUNDI (MENGI)
+   KNOWLEDGE BASE - MAJIBU
 ================================================= */
 const DATA = [
-
-  // GENERAL
-  {k:["vipi","mambo","niaje","ukoje","poa"],a:"Poa kabisa. Eleza tatizo la ufundi lilivyo."},
-  {k:["nisaidie","msaada","help"],a:"Sawa. Nipe dalili zote."},
-  {k:["wewe ni nani","jina lako"],a:"Mimi ni Masanja AI, msaidizi wa masuala ya ufundi."},
-
-  // HYDRAULIC
-  {k:["hydraulic","haina nguvu","pressure ndogo"],a:"Hydraulic ikikosa nguvu, kagua kiwango cha mafuta, pump, pressure relief valve, na filters."},
-  {k:["hydraulic","inachemka","joto","overheat"],a:"Hydraulic ikipata joto, angalia oil cooler, airflow, fan, na aina ya mafuta."},
-  {k:["hydraulic","kelele","inavuma","cavitation"],a:"Kelele kwenye hydraulic huonyesha hewa kwenye mfumo, suction imeziba, au pump imechoka."},
-  {k:["hydraulic","inavuja","leak"],a:"Uvujaji wa hydraulic hutokana na hose, fittings, seals au O-rings kuharibika."},
-
-  // ENGINE
-  {k:["engine","injini","haiwaki","haianzi"],a:"Injini isipoanza, kagua betri, starter, relay, fuel supply na air filter."},
-  {k:["engine","inachemka","joto"],a:"Joto la injini husababishwa na coolant pungufu, radiator chafu, thermostat au fan mbovu."},
-  {k:["engine","moshi mweusi"],a:"Moshi mweusi unaonyesha mafuta mengi au air filter imeziba."},
-  {k:["engine","moshi mweupe"],a:"Moshi mweupe unaweza kuonyesha maji kuingia kwenye combustion."},
-
-  // ELECTRICAL
-  {k:["umeme","taa hazifanyi"],a:"Tatizo la umeme linaweza kutokana na fuse kuchoma, wiring kuharibika au ground mbovu."},
-  {k:["battery","betri imekufa"],a:"Betri ikikufa, pima voltage na kagua terminals na alternator."},
-  {k:["alternator","haichaji"],a:"Alternator isipochaji, kagua belt, wiring na alternator yenyewe."},
-
-  // TRANSMISSION
-  {k:["gear","transmission","haibadilishi"],a:"Tatizo la kubadilisha gear hutokana na mafuta pungufu au solenoids mbovu."},
-
-  // TRANSMISSION & DRIVE
-  {k:["gear","inapiga kelele kubadilisha"],a:"Kelele wakati wa kubadilisha gear huonyesha clutch au gear zimechoka."},
-  {k:["gear","inachelewa kuingia forward"],a:"Kuchelewa kuingia forward huashiria mafuta pungufu kwenye transmission."},
-  {k:["transmission","inapata joto"],a:"Transmission ikipata joto, angalia oil level na oil cooler."},
-  {k:["final drive","inavuja mafuta"],a:"Uvujaji kwenye final drive huonyesha seal kuharibika."},
-  {k:["differential","inatoa kelele"],a:"Kelele kwenye differential huonyesha gear au bearing zimechoka."},
-
-  // FALLBACK (IBAKI MWISHO)
-  {k:["*"],a:"Nimekuelewa kwa ujumla. Tafadhali eleza zaidi dalili na mfumo unaohusika."}
+  {k:["vipi","mambo","niaje","habari"], a:"Safi sana. Nipo hapa kukusaidia na matatizo ya ufundi wa mitambo. Una changamoto gani?"},
+  {k:["hydraulic","haina nguvu","pressure"], a:"Hydraulic ikikosa nguvu, kagua kiwango cha mafuta, pump, pressure relief valve, na filters kama zimeziba."},
+  {k:["hydraulic","inachemka","joto"], a:"Hydraulic ikipata joto sana, hakikisha oil cooler ni safi na feni inafanya kazi vizuri."},
+  {k:["engine","haiwaki","haistart"], a:"Injini isipoanza, anza na betri, kagua starter motor, relay, na hakikisha mafuta (fuel) yanafika kwenye pump."},
+  {k:["engine","moshi mweusi"], a:"Moshi mweusi mara nyingi ni ishara ya air filter kuziba au nozzle kumwaga mafuta mengi kuliko hewa."},
+  {k:["engine","moshi mweupe"], a:"Moshi mweupe unaweza kumaanisha kuna maji yanaingia kwenye chemba ya mlipuko au gasket imechoka."},
+  {k:["umeme","fuse","short"], a:"Kama mfumo wa umeme haufanyi kazi, kagua fuse box kwanza, kisha pima nyaya (wiring) kama kuna mahali pamekatika."},
+  {k:["shukrani","asante","vizuri"], a:"Karibu sana! Je, kuna jambo lingine la kiufundi unahitaji msaada nalo?"},
+  {k:["*"], a:"Samahani, sijaelewa vizuri hitilafu hiyo. Tafadhali taja kama ni tatizo la Engine, Hydraulic, au Gearbox."}
 ];
 
-function getAnswer(t){
-  t=t.toLowerCase();
-  let best=null,score=0;
-  for(const d of DATA){
-    if(d.k.includes("*")) continue;
-    let s=0;
-    for(const w of d.k){ if(t.includes(w)) s++; }
-    if(s>score){ score=s; best=d.a; }
-  }
-  return best || DATA.find(d=>d.k.includes("*")).a;
-}
+const chatWindow = document.getElementById("chatWindow");
+const micBtn = document.getElementById("mic");
+const statusTxt = document.getElementById("status");
 
 /* =================================================
-   SAUTI — MOJA TU, YA KIUME, IMEFUNGWA MWANZO
+   SPEECH & VOICE LOGIC
 ================================================= */
-let FIXED_VOICE = null;
-
-function initFixedVoice(){
-  const voices = speechSynthesis.getVoices();
-  if(!voices || voices.length === 0) return;
-  FIXED_VOICE = voices.find(v => v.lang && v.lang.toLowerCase().includes("sw-ke"))
-             || voices.find(v => v.lang && v.lang.toLowerCase().startsWith("sw"))
-             || voices[0];
-  speechSynthesis.onvoiceschanged = null;
-}
-speechSynthesis.onvoiceschanged = initFixedVoice;
-
-function speak(text){
-  if(!FIXED_VOICE) initFixedVoice();
-  const u = new SpeechSynthesisUtterance(text);
-  u.voice = FIXED_VOICE;
-  u.lang = "sw-KE";
-  u.rate = 0.9;
-  u.pitch = 0.95;
+function speak(text) {
   speechSynthesis.cancel();
-  speechSynthesis.speak(u);
+  const msg = new SpeechSynthesisUtterance(text);
+  const voices = speechSynthesis.getVoices();
+  // Jaribu kupata sauti ya Swahili
+  msg.voice = voices.find(v => v.lang.includes("sw")) || voices[0];
+  msg.lang = "sw-KE";
+  msg.rate = 0.9;
+  speechSynthesis.speak(msg);
+}
+
+function getAnswer(input) {
+  const t = input.toLowerCase();
+  let bestMatch = null;
+  
+  for (const item of DATA) {
+    if (item.k.includes("*")) continue;
+    if (item.k.some(key => t.includes(key))) {
+      bestMatch = item.a;
+      break;
+    }
+  }
+  return bestMatch || DATA.find(d => d.k.includes("*")).a;
 }
 
 /* =================================================
-   SPEECH RECOGNITION
+   RECOGNITION SETUP
 ================================================= */
-const out=document.getElementById("out");
-const mic=document.getElementById("mic");
-const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-const rec=SR?new SR():null;
-
-if(rec){
-  rec.lang="sw-KE";
-  rec.interimResults=false;
-  rec.continuous=false;
-}
-
-mic.onclick=()=>{
-  if(!rec){
-    out.innerText="Browser yako haiungi mkono sauti.";
-    return;
-  }
-  out.innerText="🎧 Ninasikiliza...";
-  rec.start();
-};
-
-if(rec){
-  rec.onresult=e=>{
-    const t=e.results[0][0].transcript;
-    const a=getAnswer(t);
-    out.innerText="🗣️ Umesema:\n"+t+"\n\n🤖 Masanja AI:\n"+a;
-    speak(a);
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+if (SpeechRecognition) {
+  const recognition = new SpeechRecognition();
+  recognition.lang = "sw-KE";
+  
+  micBtn.onclick = () => {
+    recognition.start();
+    micBtn.classList.add("listening");
+    statusTxt.innerText = "Ninasikiliza...";
+    statusTxt.style.color = "#e74c3c";
   };
+
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript;
+    const answer = getAnswer(transcript);
+    
+    // Update UI
+    chatWindow.innerHTML += `
+      <div class="chat-bubble user-msg"><b>Wewe:</b> ${transcript}</div>
+      <div class="chat-bubble ai-msg"><b>Masanja AI:</b> ${answer}</div>
+    `;
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+    
+    speak(answer);
+  };
+
+  recognition.onend = () => {
+    micBtn.classList.remove("listening");
+    statusTxt.innerText = "Tayari Kusikiliza";
+    statusTxt.style.color = "var(--primary)";
+  };
+
+  recognition.onerror = () => {
+    statusTxt.innerText = "Hitilafu! Jaribu tena.";
+    micBtn.classList.remove("listening");
+  };
+} else {
+  statusTxt.innerText = "Browser haikubali Sauti.";
+  micBtn.style.display = "none";
 }
+
+// Load voices
+speechSynthesis.onvoiceschanged = () => { speechSynthesis.getVoices(); };
 </script>
 </body>
 </html>
