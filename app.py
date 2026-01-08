@@ -14,11 +14,14 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(BASE_DIR, "m
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # --- GEMINI AI CONFIGURATION ---
-genai.configure(api_key="AIzaSyCt3qnEOM3CXBIbtd5aIW_p-qS4iFShh7Q")
+# Tumia API Key uliyopata hapa
+API_KEY = "AIzaSyCt3qnEOM3CXBIbtd5aIW_p-qS4iFShh7Q"
+genai.configure(api_key=API_KEY)
 
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = "login"
+login_manager.login_message_category = "info"
 
 # --- MODELS ---
 class User(db.Model, UserMixin):
@@ -39,8 +42,8 @@ class Machine(db.Model):
     brand = db.Column(db.String(50))
     model = db.Column(db.String(50))
     serial = db.Column(db.String(50), unique=True)
-    current_hours = db.Column(db.Integer, default=0)
-    next_service_hours = db.Column(db.Integer, default=250)
+    current_hours = db.Column(db.Integer, default=0) 
+    next_service_hours = db.Column(db.Integer, default=250) 
     owner_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
 @login_manager.user_loader
@@ -50,76 +53,125 @@ def load_user(user_id):
 # --- AUTH ROUTES ---
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    if current_user.is_authenticated: return redirect(url_for('index'))
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
     if request.method == "POST":
         u, p = request.form.get("username"), request.form.get("password")
         if User.query.filter_by(username=u).first():
-            flash("User tayari yupo", "danger")
+            flash("Jina hili tayari lipo.", "danger")
             return redirect(url_for("register"))
-        user = User(username=u); user.set_password(p)
-        db.session.add(user); db.session.commit()
+        new_user = User(username=u)
+        new_user.set_password(p)
+        db.session.add(new_user)
+        db.session.commit()
+        flash("Akaunti imetengenezwa!", "success")
         return redirect(url_for("login"))
     return render_template("register.html")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    if current_user.is_authenticated: return redirect(url_for('index'))
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
     if request.method == "POST":
-        user = User.query.filter_by(username=request.form.get("username")).first()
-        if user and user.check_password(request.form.get("password")):
+        u, p = request.form.get("username"), request.form.get("password")
+        user = User.query.filter_by(username=u).first()
+        if user and user.check_password(p):
             login_user(user)
             return redirect(url_for("index"))
-        flash("Login imekataa", "danger")
+        flash("Login imefeli. Angalia jina au nywila.", "danger")
     return render_template("login.html")
 
 @app.route("/logout")
+@login_required
 def logout():
-    logout_user(); return redirect(url_for("login"))
+    logout_user()
+    return redirect(url_for("login"))
 
-# --- AI DIAGNOSIS (HALISI) ---
+# --- DASHBOARD ---
+@app.route("/")
+@app.route("/index")
+@login_required
+def index():
+    fleet_count = Machine.query.filter_by(owner_id=current_user.id).count()
+    return render_template("index.html", user=current_user.username, fleet_count=fleet_count)
+
+# --- AI DIAGNOSIS (HYBRID: DATABASE + GEMINI API) ---
 @app.route("/diagnosis", methods=["GET", "POST"])
 @login_required
 def diagnosis():
     result = None
     if request.method == "POST":
-        user_input = request.form.get("error_code", "").strip()
-        try:
-            # Tunatengeneza akili ya fundi hapa
-            model = genai.GenerativeModel('gemini-1.5-flash')
-            prompt = (f"Wewe ni mfumo wa AI unaitwa DR-MITAMBO PRO, mtaalamu wa ufundi wa mitambo mizito (Caterpillar, Komatsu, Sinotruk, n.k). "
-                      f"Mteja ana shida hii: '{user_input}'. "
-                      f"Toa maelezo ya kitaalamu, vyanzo vya tatizo, na hatua za kurekebisha kwa Kiswahili fasaha na rahisi.")
-            
-            response = model.generate_content(prompt)
-            result = response.text
-        except Exception as e:
-            result = "Error: AI imeshindwa kujibu. Hakikisha API Key iko sawa na una internet."
-            
+        query = request.form.get("error_code", "").strip()
+        code = query.upper()
+        
+        # 1. DATABASE YA NDANI (MAJIBU YA HARAKA)
+        solutions = {
+            "102-3": "CAT Boost Pressure Sensor: Voltage iko juu. Kagua sensor na nyaya.",
+            "110-3": "CAT Engine Coolant Temp: Joto la maji limezidi. Kagua radiator na sensor.",
+            "190-8": "CAT Engine Speed Signal: Signal siyo ya kawaida. Kagua Speed sensor kwenye flywheel.",
+            "E11": "Komatsu Engine Overload: Punguza mzigo wa kazi, mtambo unalemewa.",
+            "E15": "Komatsu Water Temp High: Joto la maji limezidi kiwango.",
+            "CA441": "Komatsu Battery Voltage Low: Chaji ya betri iko chini sana. Kagua alternator.",
+            "P0087": "Sinotruk Fuel Rail Pressure Low: Shinikizo la mafuta ni dogo. Kagua fuel filter.",
+            "P0299": "Sinotruk Turbo Underboost: Turbo haitoi shinikizo la kutosha.",
+            "P0101": "MAF Sensor: Hitilafu ya mzunguko wa hewa. Safisha air filter.",
+            "HYD-LOW": "Low Hydraulic Oil: Ongeza mafuta ya hydraulic mara moja."
+        }
+        
+        # Tafuta kwenye dictionary kwanza
+        result = solutions.get(code)
+        
+        # 2. KAMA HAIPO KWENYE DICTIONARY, TUMIA GEMINI AI
+        if not result:
+            try:
+                model = genai.GenerativeModel('gemini-1.5-flash')
+                # Prompt maalum kwa ajili ya ufundi
+                full_prompt = (
+                    f"Wewe ni DR-MITAMBO PRO, mtaalamu wa ufundi wa mitambo mizito (Heavy Machinery). "
+                    f"Mteja anauliza kuhusu: '{query}'. "
+                    f"Toa maelezo ya kitaalamu, sababu zinazoweza kusababisha, na hatua za kurekebisha kwa Kiswahili fasaha."
+                )
+                response = model.generate_content(full_prompt)
+                result = response.text
+            except Exception as e:
+                result = "Samahani, AI imeshindwa kuchakata ombi lako kwa sasa. Kagua internet yako."
+                
     return render_template("diagnosis.html", result=result)
 
-# --- ROUTES NYINGINE ---
-@app.route("/")
-@app.route("/index")
-@login_required
-def index():
-    fleet = Machine.query.filter_by(owner_id=current_user.id).count()
-    return render_template("index.html", user=current_user.username, fleet_count=fleet)
-
+# --- MODULI NYINGINE ---
 @app.route("/electrical")
 @login_required
-def electrical(): return render_template("placeholder.html", title="Electrical System")
+def electrical():
+    return render_template("placeholder.html", title="Electrical System")
+
+@app.route("/systems_op")
+@login_required
+def systems_op():
+    return render_template("placeholder.html", title="Systems Operation")
 
 @app.route("/maintenance")
 @login_required
 def maintenance():
-    data = Machine.query.filter_by(owner_id=current_user.id).all()
-    return render_template("placeholder.html", title="Maintenance Schedule", machines=data)
+    user_machines = Machine.query.filter_by(owner_id=current_user.id).all()
+    return render_template("placeholder.html", title="Maintenance Schedule", machines=user_machines)
 
-# Ongeza hapa route nyingine kama zilivyokuwa awali...
+# Njia nyingine zote zilizobaki...
+@app.route("/parts")
+@login_required
+def parts(): return render_template("placeholder.html", title="Parts Book")
+
+@app.route("/manuals")
+@login_required
+def manuals(): return render_template("placeholder.html", title="Service Manuals")
+
+@app.route("/machines")
+@login_required
+def machines():
+    data = Machine.query.filter_by(owner_id=current_user.id).all()
+    return render_template("machines.html", machines=data)
 
 with app.app_context():
     db.create_all()
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8000)))
-
